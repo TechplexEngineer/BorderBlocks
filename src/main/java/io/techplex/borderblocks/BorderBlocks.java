@@ -19,6 +19,15 @@ public class BorderBlocks {
         return (b.getType() == mat&& b.getState().getData().getData() == data);
     }
     
+    public static boolean isSpecialBlock(Block b) {
+        return isBuildAllowBlock(b) ||
+        isBuildDisallowBlock(b) ||
+        isBorderBlock(b) ||
+        isTurtleBuildAllowBlock(b) ||
+        isTurtleBuildDisallowBlock(b) ||
+        isTurtleBorderBlock(b) ||
+        isTurtleAntiBorderBlock(b);
+    }
     public static boolean isBuildAllowBlock(Block b) {
         return isMaterialAndData(b, Material.STAINED_CLAY, DyeColor.LIME.getData());
     }

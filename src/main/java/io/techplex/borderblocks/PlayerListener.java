@@ -31,17 +31,18 @@ public class PlayerListener implements Listener {
 	 */
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {
-//         Block b = event.getBlock();
-//        if (b.getType() == Material.WOOL) {
-//            Colorable md = ((Colorable)b.getState().getData());
-//            System.out.println(md.getColor());
-//        }
-//        if (b.getType() == Material.STAINED_CLAY) {
-//            MaterialData md = b.getState().getData();
-//            System.out.println(md+" | "+DyeColor.getByData(md.getData())+" | "+md.getData()+" | "+DyeColor.RED.getData());
-//            
-//        }
-//        System.out.println("TBA: "+BorderBlocks.isTurtleBuildAllowBlock(b));
+        Block removed = event.getBlock();
+        System.out.println(removed);
+        Location l = removed.getLocation();
+        int x = l.getBlockX();
+        int y = l.getBlockY();
+        int z = l.getBlockZ();
+        Player p = event.getPlayer();
+        
+        if (! Perms.canPlayerDigHere(p, x, y, z)) {
+            event.setCancelled(true);
+            p.sendMessage("Sorry you cannot remove blocks here.");
+        }
     }
     
     @EventHandler
@@ -53,12 +54,8 @@ public class PlayerListener implements Listener {
         int y = l.getBlockY();
         int z = l.getBlockZ();
         Player p = event.getPlayer();
-
-        String id = (new Location(p.getWorld(), x, y-1, z)).getBlock().toString();
         
-//        p.sendMessage("You placed a block above: "+id);
-        
-        if (! Perms.canBuildPlayerHere(p, x, y, z)) {
+        if (! Perms.canPlayerBuildHere(p, x, y, z)) {
             event.setCancelled(true);
             p.sendMessage("Sorry you cannot place blocks here.");
         }
