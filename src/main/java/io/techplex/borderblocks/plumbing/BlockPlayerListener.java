@@ -3,26 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.techplex.borderblocks;
+package io.techplex.borderblocks.plumbing;
 
-import org.bukkit.DyeColor;
+import io.techplex.borderblocks.Perms;
+
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.material.Colorable;
-import org.bukkit.material.Dye;
-import org.bukkit.material.MaterialData;
 
 /**
  *
  * @author techplex
  */
-public class PlayerListener implements Listener {
+public class BlockPlayerListener implements Listener {
 	
 
 	/**
@@ -32,7 +29,6 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {
         Block removed = event.getBlock();
-        System.out.println(removed);
         Location l = removed.getLocation();
         int x = l.getBlockX();
         int y = l.getBlockY();

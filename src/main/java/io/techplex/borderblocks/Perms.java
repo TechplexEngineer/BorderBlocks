@@ -39,7 +39,7 @@ public class Perms {
         }
         else {
             if (BorderBlocks.isSpecialBlock(loc.getBlock())) {
-                return false;
+                return true;
             }
             boolean allowDig = State.getInstance().isStudentBuildingEnabled(); //is student building enabled
             

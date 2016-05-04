@@ -1,10 +1,25 @@
 name: BorderBlocks
 author: TechplexEngineer
-main: io.techplex.borderblocks.Main
+main: io.techplex.borderblocks.plumbing.Main
 version: 1.0
 prefix: BorderBlocks
 commands:
+  turtle:
+    aliases: [t]
+  turtlerod:
+  reloadscripts:
+  loc1:
+  loc2:
+  createarea:
+  listareas:
+  
 permissions:
+  turtles.destroy:
+    default: true
+  turtles.stop:
+    default: true
+  turtles.reload:
+    default: op
  
     
     
