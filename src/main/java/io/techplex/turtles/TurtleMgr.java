@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -18,23 +20,23 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class TurtleMgr  {
 	
 	private static TurtleMgr inst = null;
-	private List<Turtle> TURTLES;
+        private ConcurrentHashMap<String, Turtle> TURTLES;
 	protected TurtleMgr () {
-		TURTLES = new ArrayList<>();
+		TURTLES = new ConcurrentHashMap<>();
 	}
 	public static TurtleMgr getInstance() {
-      if(inst == null) {
-         inst = new TurtleMgr();
-      }
-      return inst;
+            if(inst == null) {
+                inst = new TurtleMgr();
+            }
+            return inst;
 	}
 	
 	/**
 	 * Static variables are not cleared when bukkit reloads the plugin.
 	 */
 	public void cleanup() {
-		for (Turtle t : TurtleMgr.getInstance().getTurtles()) {
-			t.shutdownTasks();
+		for (Map.Entry<String, Turtle> t : TURTLES.entrySet()) {
+			t.getValue().shutdownTasks();
 		}
 		TurtleMgr.inst = null;
 	}
@@ -50,17 +52,17 @@ public class TurtleMgr  {
 	 * Get a list of turtles
 	 * @return a collection of turtles
 	 */
-	public List<Turtle> getTurtles() {
+	public ConcurrentHashMap<String, Turtle> getTurtles() {
 		return TURTLES;
 	}
     
-    /**
-     * Get the number of Turtles managed by this TurtleMgr
-     * @return Count of turtles on the server
-     */
-    public int getNumTurtles() {
-        return TURTLES.size();
-    }
+        /**
+         * Get the number of Turtles managed by this TurtleMgr
+         * @return Count of turtles on the server
+         */
+        public int getNumTurtles() {
+            return TURTLES.size();
+        }
 	
 	/**
 	 * Add a turtle to the list
@@ -69,11 +71,11 @@ public class TurtleMgr  {
 	 */
 	private boolean add(Turtle t) {
 		if (getByName(t.getName()) == null) {
-			TURTLES.add(t);
+			TURTLES.put(t.getName(), t);
 			return true;
 		}
 		return false;
-		
+
 	}
 	
 	/**
@@ -98,7 +100,7 @@ public class TurtleMgr  {
 	public void remove(String name) {
 		Turtle t = getByName(name);
 		t.destroy(true);
-		TURTLES.remove(t);
+		TURTLES.remove(t.getName());
 	}
 
 	/**
@@ -107,9 +109,9 @@ public class TurtleMgr  {
 	 * @return the turtle if found, null otherwise
 	 */
 	public Turtle getByLoc(Location l) {
-		for (Turtle t : TURTLES)
-			if (t.getLocation().equals(l)) {
-				return t;
+		for (Map.Entry<String, Turtle> t : TURTLES.entrySet())
+			if (t.getValue().getLocation().equals(l)) {
+				return t.getValue();
 			}
 		return null;
 	}
@@ -120,11 +122,7 @@ public class TurtleMgr  {
 	 * @return the turtle if found, null otherwise
 	 */
 	public Turtle getByName(String name) {
-		for (Turtle t : TURTLES)
-			if (t.getName().equals(name)) {
-				return t;
-			}
-		return null;
+		return TURTLES.get(name);
 	}
     
 	

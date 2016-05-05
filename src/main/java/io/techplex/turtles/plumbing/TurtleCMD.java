@@ -5,6 +5,8 @@ import io.techplex.turtles.TurtleMgr;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -56,8 +58,8 @@ public class TurtleCMD implements CommandExecutor, TabCompleter {
 		
 		if (args[0].equalsIgnoreCase("list")) {
 			sender.sendMessage("There are "+TurtleMgr.getInstance().getTurtles().size()+" turtles:");
-			for (Turtle tur : TurtleMgr.getInstance().getTurtles()) {
-				sender.sendMessage(tur.getName());
+			for (Map.Entry<String, Turtle> t : TurtleMgr.getInstance().getTurtles().entrySet()) {
+				sender.sendMessage(t.getValue().getName());
 			}
 			return true;
 		}
@@ -411,11 +413,11 @@ public class TurtleCMD implements CommandExecutor, TabCompleter {
 			if ("wand".startsWith(args[0].toLowerCase())) {
 				possibles.add("wand");
 			}
-			for (Turtle t : TurtleMgr.getInstance().getTurtles()) {
+			for (Map.Entry<String, Turtle> t : TurtleMgr.getInstance().getTurtles().entrySet()) {
 				Player p = (Player)sender;
-				if (p.getUniqueId() != t.getOwner())
+				if (p.getUniqueId() != t.getValue().getOwner())
 					continue;
-				String name = t.getName();
+				String name = t.getValue().getName();
 				if (args[0].length() == 0) {
 					possibles.add(name);
 					continue;

@@ -38,16 +38,30 @@ public class WebApi {
 			apiserver = new Server();
 			apiserver.GET("/", (req, res) -> {
 				res.respondText("Hello world");
+				
 			})
 			.GET("/hello/:name", (req, res) -> {
 				String name = req.param("name");
 				queue.add(new ApiAction(name));
 				res.respondText("Hello " + name);
 			})
+			.GET("/turtle/:name/:action/:direction", (req, res) -> {
+				String name = req.param("name");
+				String action = req.param("action");
+				String direction = req.param("direction");
+//				String name = req.param("name"); /:count
+				
+				queue.add(new ApiAction(name));
+				res.respondText("Hello " + name);
+			})
+			.POST("/t", (req, res) -> {
+			})
 			.start(8000);
 			
+		} 
+		else {
+			Main.getInstance().getLogger().warning("apiserver already started");
 		}
-		Main.getInstance().getLogger().warning("apiserver already started");
 	}
 	public void stop() {
 		Main.getInstance().getLogger().warning("At this time, it is not possible to stop the WebAPI server. ");
