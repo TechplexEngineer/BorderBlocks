@@ -127,6 +127,8 @@ public class TurtleMgr  {
 		return null;
 	}
     
+	
+	//@todo we need a perodic task to persist this info to protect againts a bad server shut down
     public void persistTurtles() {
 		YamlConfiguration c = new YamlConfiguration();
 		c.set("Turtles", TurtleMgr.getInstance().getTurtles());

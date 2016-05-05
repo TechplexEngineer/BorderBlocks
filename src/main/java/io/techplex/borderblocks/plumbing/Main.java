@@ -10,6 +10,7 @@ import io.techplex.turtles.Turtle;
 import io.techplex.turtles.TurtleMgr;
 import io.techplex.turtles.plumbing.TurtleCMD;
 import io.techplex.turtles.plumbing.TurtlePlayerListener;
+import io.techplex.turtles.web.WebApi;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +38,7 @@ public class Main extends JavaPlugin {
         //This should never happen because to call Main.getInstance the plugin has to have been initialized.
         throw new NullPointerException("Plugin not yet Initialized!");
     }
+
     
     
     // Fired when plugin is first enabled
@@ -62,6 +64,8 @@ public class Main extends JavaPlugin {
 		getCommand("turtle").setExecutor(tcmd);
 
 		TurtleMgr.getInstance().restoreTurtles();
+		
+		WebApi.getInstance().start();
 
     }
     // Fired when plugin is disabled
