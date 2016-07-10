@@ -22,11 +22,7 @@ public class BorderBlocks {
     public static boolean isSpecialBlock(Block b) {
         return isBuildAllowBlock(b) ||
         isBuildDisallowBlock(b) ||
-        isBorderBlock(b) ||
-        isTurtleBuildAllowBlock(b) ||
-        isTurtleBuildDisallowBlock(b) ||
-        isTurtleBorderBlock(b) ||
-        isTurtleAntiBorderBlock(b);
+        isBorderBlock(b);
     }
     public static boolean isBuildAllowBlock(Block b) {
         return isMaterialAndData(b, Material.STAINED_CLAY, DyeColor.LIME.getData());
@@ -40,21 +36,5 @@ public class BorderBlocks {
             return true; 
         }
        return false;               
-    }
-    
-    public static boolean isTurtleBuildAllowBlock(Block b) {
-        return isMaterialAndData(b, Material.WOOL, DyeColor.BLUE.getData());              
-    }
-    
-    public static boolean isTurtleBuildDisallowBlock(Block b) {
-        return isMaterialAndData(b, Material.WOOL, DyeColor.ORANGE.getData());              
-    }
-    
-    public static boolean isTurtleBorderBlock(Block b) {
-        return isMaterialAndData(b, Material.WOOL, DyeColor.RED.getData());              
-    }
-    
-    public static boolean isTurtleAntiBorderBlock(Block b) {
-        return isMaterialAndData(b, Material.WOOL, DyeColor.GREEN.getData());              
     }
 }

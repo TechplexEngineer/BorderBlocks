@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.techplex.borderblocks.plumbing;
+package io.techplex.borderblocks;
 
-import io.techplex.borderblocks.PlayerPerms;
-import io.techplex.borderblocks.PluginState;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,6 +30,7 @@ public class BorderBlocksPlugin extends JavaPlugin {
 		PlayerPerms perms = new PlayerPerms(state);
         
 		pm.registerEvents(new BlockPlayerListener(perms), this);
+		pm.registerEvents(new PlayerMoveListener(this), this);
 		
 		
     }

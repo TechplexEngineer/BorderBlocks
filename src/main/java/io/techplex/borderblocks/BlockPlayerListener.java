@@ -3,9 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.techplex.borderblocks.plumbing;
-
-import io.techplex.borderblocks.PlayerPerms;
+package io.techplex.borderblocks;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
