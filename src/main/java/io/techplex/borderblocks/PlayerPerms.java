@@ -13,40 +13,41 @@ import org.bukkit.entity.Player;
  *
  * @author techplex
  */
-public class Perms {
-    public static boolean canPlayerBuildHere(Player player, int x, int y, int z) {
+public class PlayerPerms {
+	
+	private PluginState state;
+	
+	public PlayerPerms(PluginState state) {
+		this.state = state;
+	}
+	
+	
+    public boolean canPlayerBuildHere(Player player, int x, int y, int z) {
         //remember in MC y is the altitude while x and z are the lat and lon
 
-        //are we in a restricted area
-        if ( ! State.getInstance().isInRestrictedArea(new Location(player.getWorld(), x, y, z))) {
-            return true;
-        }
-        else {
-            boolean allowBuild = State.getInstance().isStudentBuildingEnabled(); //is student building enabled
-            
-            allowBuild = blocksAllowBuilding(allowBuild, player, x, y, z);
-            
-            return allowBuild;
+		boolean allowBuild = state.isStudentBuildingEnabled(); //is student building enabled
 
-        }
+		allowBuild = blocksAllowBuilding(allowBuild, player, x, y, z);
+
+		return allowBuild;
+
+        
     }
-    public static boolean canPlayerDigHere(Player player, int x, int y, int z) {
+    public boolean canPlayerDigHere(Player player, int x, int y, int z) {
         //remember in MC y is the altitude while x and z are the lat and lon
         Location loc = new Location(player.getWorld(), x, y, z);
         //are we in a restricted area
-        if ( ! State.getInstance().isInRestrictedArea(loc)) {
-            return true;
-        }
-        else {
-            if (BorderBlocks.isSpecialBlock(loc.getBlock())) {
-                return true;
-            }
-            boolean allowDig = State.getInstance().isStudentBuildingEnabled(); //is student building enabled
-            
-            allowDig = blocksAllowBuilding(allowDig, player, x, y, z);
-            
-            return allowDig;
-        }
+
+
+		if (BorderBlocks.isSpecialBlock(loc.getBlock())) {
+			return false;
+		}
+		boolean allowDig = state.isStudentBuildingEnabled(); //is student building enabled
+
+		allowDig = blocksAllowBuilding(allowDig, player, x, y, z);
+
+		return allowDig;
+        
     }
     private static boolean blocksAllowBuilding(boolean allowChange, Player player, int x, int y, int z) {
         //search down for build allow of build deny block

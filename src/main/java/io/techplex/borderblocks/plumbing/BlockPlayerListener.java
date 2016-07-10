@@ -5,7 +5,7 @@
  */
 package io.techplex.borderblocks.plumbing;
 
-import io.techplex.borderblocks.Perms;
+import io.techplex.borderblocks.PlayerPerms;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -21,11 +21,12 @@ import org.bukkit.event.block.BlockPlaceEvent;
  */
 public class BlockPlayerListener implements Listener {
 	
-
-	/**
-	 * Handle the removal of turtles when blocks are broken
-	 * @param event 
-	 */
+	private PlayerPerms perms;
+	
+	public BlockPlayerListener(PlayerPerms perms) {
+		this.perms = perms;
+	}
+	
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {
         Block removed = event.getBlock();
@@ -35,7 +36,7 @@ public class BlockPlayerListener implements Listener {
         int z = l.getBlockZ();
         Player p = event.getPlayer();
         
-        if (! Perms.canPlayerDigHere(p, x, y, z)) {
+        if (! perms.canPlayerDigHere(p, x, y, z)) {
             event.setCancelled(true);
             p.sendMessage("Sorry you cannot remove blocks here.");
         }
@@ -51,7 +52,7 @@ public class BlockPlayerListener implements Listener {
         int z = l.getBlockZ();
         Player p = event.getPlayer();
         
-        if (! Perms.canPlayerBuildHere(p, x, y, z)) {
+        if (! perms.canPlayerBuildHere(p, x, y, z)) {
             event.setCancelled(true);
             p.sendMessage("Sorry you cannot place blocks here.");
         }

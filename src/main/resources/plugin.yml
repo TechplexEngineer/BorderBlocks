@@ -1,6 +1,6 @@
 name: BorderBlocks
 author: TechplexEngineer
-main: io.techplex.borderblocks.plumbing.Main
+main: io.techplex.borderblocks.plumbing.BorderBlocksPlugin
 version: 1.0
 prefix: BorderBlocks
 commands:
