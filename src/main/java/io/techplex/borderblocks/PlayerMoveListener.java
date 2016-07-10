@@ -43,9 +43,11 @@ public class PlayerMoveListener implements Listener {
 	
 	private BorderBlocksPlugin plugin;
 	private Location lastValid;
+	private PlayerPerms perms;
 	
-    public PlayerMoveListener(BorderBlocksPlugin plugin) {
+    public PlayerMoveListener(BorderBlocksPlugin plugin, PlayerPerms perms) {
         this.plugin = plugin;
+		this.perms = perms;
     }
 
     public void registerEvents() {
@@ -78,7 +80,7 @@ public class PlayerMoveListener implements Listener {
 			Location to = event.getVehicle().getLocation();
 			plugin.getLogger().info(loc2str(from)+" "+loc2str(to));
 			
-			Optional<Location> overriding = testMoveTo(player,from, to, MoveType.EMBARK, true);
+			Optional<Location> overriding = perms.testMoveTo(player,from, to, MoveType.EMBARK, true);
 
             if (overriding.isPresent()) {
                 event.setCancelled(true);
@@ -92,7 +94,7 @@ public class PlayerMoveListener implements Listener {
 		if (entity instanceof Player) {
             Player player = (Player) entity;
 			
-			Optional<Location> overriding = testMoveTo(player, event.getFrom(), event.getTo(), MoveType.RIDE, false);
+			Optional<Location> overriding = perms.testMoveTo(player, event.getFrom(), event.getTo(), MoveType.RIDE, false);
 			
 			if (overriding.isPresent()) {
 				Location override = overriding.get();
@@ -127,7 +129,7 @@ public class PlayerMoveListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerMove(PlayerMoveEvent event) {
         final Player player = event.getPlayer();
-        Optional<Location> overriding = testMoveTo(player, event.getFrom(), event.getTo(), MoveType.MOVE, false);
+        Optional<Location> overriding = perms.testMoveTo(player, event.getFrom(), event.getTo(), MoveType.MOVE, false);
 
         if (overriding.isPresent()) {
 			Location override = overriding.get();
@@ -163,78 +165,4 @@ public class PlayerMoveListener implements Listener {
             }
         }
     }
-	
-	/**
-     * Test movement to the given location.
-     *
-     * <p>If a non-null {@link Location} is returned, the player should be
-     * at that location instead of where the player has tried to move to.</p>
-     *
-     * <p>If the {@code moveType} is cancellable
-     * ({@link MoveType#isCancellable()}, then the last valid location will
-     * be set to the given one.</p>
-     *
-     * @param player The player
-     * @param to The new location
-	 * @param from the previous location
-     * @param moveType The type of move
-     * @param forced Whether to force a check
-     * @return The overridden location, if the location is being overridden
-     */
-    public Optional<Location> testMoveTo(Player player, Location from, Location to, MoveType moveType, boolean forced) {
-		
-//		if (from.getWorld() == to.getWorld()) {
-
-			int x1 = to.getBlockX();
-			int x2 = x1;
-			if (from != null) {
-				x1 = Math.min(from.getBlockX(), to.getBlockX());
-				x2 = Math.max(to.getBlockX(), from.getBlockX());
-			}
-			
-			int z1 = to.getBlockZ();
-			int z2 = z1;
-			if (from != null) {
-				z1 = Math.min(from.getBlockZ(), to.getBlockZ());
-				z2 = Math.max(to.getBlockZ(), from.getBlockZ());
-				//do we need to do the same thing for Z? @todo
-			}
-			
-			for(; x1 <= x2; x1++) {
-				for(; z1 <= z2; z1++) {
-					for(int y=0; y<255; y++) {
-						Block b = to.getWorld().getBlockAt(x1, y, z1);
-						if (BorderBlocks.isBorderBlock(b)) {
-							plugin.getLogger().info("Border Block Found!");
-
-							Location reject = from.clone();
-							if (from != null) {
-								double vx = -from.getX() + to.getX();
-								double vy = -from.getY() + to.getY();
-								double vz = -from.getZ() + to.getZ();
-								
-								vx = vx/Math.abs(vx);
-								vy = vy/Math.abs(vy);
-								vz = vz/Math.abs(vz);
-
-								Vector v = new Vector(vx, vy, vz);
-//								v.multiply(2);
-			//					plugin.getLogger().info(""+v);
-
-
-//								reject.subtract();
-							}
-
-							return Optional.of(reject);
-						} 
-					}
-				}
-			}
-
-//		} else {
-//			plugin.getLogger().info("Player changed worlds! From: "+from.getWorld().getName()+" To: "+to.getWorld().getName());
-//		}
-		return Optional.empty();
-    }
-
 }

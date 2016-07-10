@@ -36,16 +36,18 @@ public class BorderBlocksPlugin extends JavaPlugin {
     public void onEnable() {
         log = getLogger();
         log.info("Starting BorderBlocks Plugin");
+				
         PluginManager pm = Bukkit.getPluginManager();
 		
 		PluginState state = new PluginState();
-		PlayerPerms perms = new PlayerPerms(state);
+		PlayerPerms perms = new PlayerPerms(this, state);
         
 		pm.registerEvents(new BlockPlayerListener(perms), this);
-		pm.registerEvents(new PlayerMoveListener(this), this);
+		pm.registerEvents(new PlayerMoveListener(this, perms), this);
 		
 		
     }
+	
     // Fired when plugin is disabled
     @Override
     public void onDisable() {

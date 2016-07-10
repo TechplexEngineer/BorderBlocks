@@ -2,24 +2,9 @@ name: BorderBlocks
 author: TechplexEngineer
 main: io.techplex.borderblocks.BorderBlocksPlugin
 version: 1.0
-prefix: BorderBlocks
-commands:
-  turtle:
-    aliases: [t]
-  turtlerod:
-  reloadscripts:
-  loc1:
-  loc2:
-  createarea:
-  listareas:
-  
 permissions:
-  turtles.destroy:
-    default: true
-  turtles.stop:
-    default: true
-  turtles.reload:
-    default: op
+  borderblocks.teacher:
+    default: false
  
     
     

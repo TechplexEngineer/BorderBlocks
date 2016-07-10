@@ -17,9 +17,11 @@
  */
 package io.techplex.borderblocks;
 
+import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 /**
  *
@@ -28,15 +30,20 @@ import org.bukkit.entity.Player;
 public class PlayerPerms {
 	
 	private PluginState state;
+	private final BorderBlocksPlugin plugin;
+	private final String teacherPerm = "borderblocks.teacher";
 	
-	public PlayerPerms(PluginState state) {
+	public PlayerPerms(BorderBlocksPlugin plugin, PluginState state) {
 		this.state = state;
+		this.plugin = plugin;
 	}
 	
 	
     public boolean canPlayerBuildHere(Player player, int x, int y, int z) {
         //remember in MC y is the altitude while x and z are the lat and lon
-
+		if (player.hasPermission(teacherPerm)) {
+			return true;
+		}
 		boolean allowBuild = state.isStudentBuildingEnabled(); //is student building enabled
 
 		allowBuild = blocksAllowBuilding(allowBuild, player, x, y, z);
@@ -46,7 +53,11 @@ public class PlayerPerms {
         
     }
     public boolean canPlayerDigHere(Player player, int x, int y, int z) {
-        //remember in MC y is the altitude while x and z are the lat and lon
+        
+		if (player.hasPermission(teacherPerm)) {
+			return true;
+		}
+		//remember in MC y is the altitude while x and z are the lat and lon
         Location loc = new Location(player.getWorld(), x, y, z);
         //are we in a restricted area
 
@@ -93,5 +104,80 @@ public class PlayerPerms {
         }
 
         return allowChange;
-    }     
+    }
+	/**
+	 * Test movement to the given location.
+	 *
+	 * <p>
+	 * If a non-null {@link Location} is returned, the player should be at that
+	 * location instead of where the player has tried to move to.</p>
+	 *
+	 * <p>
+	 * If the {@code moveType} is cancellable ({@link MoveType#isCancellable()},
+	 * then the last valid location will be set to the given one.</p>
+	 *
+	 * @param player The player
+	 * @param to The new location
+	 * @param from the previous location
+	 * @param moveType The type of move
+	 * @param forced Whether to force a check
+	 * @return The overridden location, if the location is being overridden
+	 */
+	public Optional<Location> testMoveTo(Player player, Location from, Location to, MoveType moveType, boolean forced) {
+		
+		if (player.hasPermission(teacherPerm)) {
+			return Optional.empty();
+		}
+
+//		if (from.getWorld() == to.getWorld()) {
+		int x1 = to.getBlockX();
+		int x2 = x1;
+		if (from != null) {
+			x1 = Math.min(from.getBlockX(), to.getBlockX());
+			x2 = Math.max(to.getBlockX(), from.getBlockX());
+		}
+
+		int z1 = to.getBlockZ();
+		int z2 = z1;
+		if (from != null) {
+			z1 = Math.min(from.getBlockZ(), to.getBlockZ());
+			z2 = Math.max(to.getBlockZ(), from.getBlockZ());
+			//do we need to do the same thing for Z? @todo
+		}
+
+		for (; x1 <= x2; x1++) {
+			for (; z1 <= z2; z1++) {
+				for (int y = 0; y < 255; y++) {
+					Block b = to.getWorld().getBlockAt(x1, y, z1);
+					if (BorderBlocks.isBorderBlock(b)) {
+						plugin.getLogger().info("Border Block Found!");
+
+						Location reject = from.clone();
+						if (from != null) {
+							double vx = -from.getX() + to.getX();
+							double vy = -from.getY() + to.getY();
+							double vz = -from.getZ() + to.getZ();
+
+							vx = vx / Math.abs(vx);
+							vy = vy / Math.abs(vy);
+							vz = vz / Math.abs(vz);
+
+							Vector v = new Vector(vx, vy, vz);
+//								v.multiply(2);
+							//					plugin.getLogger().info(""+v);
+
+//								reject.subtract();
+						}
+
+						return Optional.of(reject);
+					}
+				}
+			}
+		}
+
+//		} else {
+//			plugin.getLogger().info("Player changed worlds! From: "+from.getWorld().getName()+" To: "+to.getWorld().getName());
+//		}
+		return Optional.empty();
+	}
 }
