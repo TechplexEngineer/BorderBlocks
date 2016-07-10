@@ -33,7 +33,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.Vector;
 
 /**
- *
+ * Handle player move events and ensure that they don't move as prohibited by
+ * border blocks.
  * @author techplex
  */
 public class PlayerMoveListener implements Listener {
@@ -78,9 +79,6 @@ public class PlayerMoveListener implements Listener {
 
         if (overriding.isPresent()) {
 			Location override = overriding.get();
-            override.setX(override.getBlockX());// + 0.5
-            override.setY(override.getBlockY());
-//            override.setZ(override.getBlockZ()); / + 0.5
             override.setPitch(event.getTo().getPitch());
             override.setYaw(event.getTo().getYaw());
 
@@ -133,45 +131,32 @@ public class PlayerMoveListener implements Listener {
      */
     public Optional<Location> testMoveTo(Player player, Location to, Location from, MoveType moveType, boolean forced) {
 		
-//		TurtleCodePlugin.getInstance().getLogger().info("From: "+from+" To: "+to);
-		
 		if (from.getWorld() == to.getWorld()) {
 			int x1 = Math.min(from.getBlockX(), to.getBlockX());
-			int x2 = Math.min(to.getBlockX(), from.getBlockX());
-//			TurtleCodePlugin.getInstance().getLogger().info("x1:"+x1+" x2:"+x2);
-			for(; x1 <= x2; x1++) {
-				for(int y=0; y<255; y++) {
-					Block b = from.getWorld().getBlockAt(x1, y, from.getBlockZ());
-					if (BorderBlocks.isBorderBlock(b)) {
-						plugin.getLogger().info("Is Border Block! "+"<"+from.getX()+" "+from.getY()+" "+from.getZ()+">, to: <"+to.getX()+" "+to.getY()+" "+to.getZ()+">");
-						
-						double vx = from.getX() - to.getX();
-						double vy = from.getY() - to.getY();
-						double vz = from.getZ() - to.getZ();
-						
-						Vector v = new Vector(vx, vy, vz);
-						v.multiply(2);
-						plugin.getLogger().info(""+v);
-						Location reject = from.clone();
-						
-						reject.subtract(v);
-						
-						
-						
-						return Optional.of(reject);
-					} 
-//					else {
-//						TurtleCodePlugin.getInstance().getLogger().info("Found: " + b.getType());
-//					}
-				}
+
+			for(int y=0; y<255; y++) {
+				Block b = from.getWorld().getBlockAt(x1, y, from.getBlockZ());
+				if (BorderBlocks.isBorderBlock(b)) {
+
+					double vx = from.getX() - to.getX();
+					double vy = from.getY() - to.getY();
+					double vz = from.getZ() - to.getZ();
+
+					Vector v = new Vector(vx, vy, vz);
+					v.multiply(2);
+					plugin.getLogger().info(""+v);
+					Location reject = from.clone();
+
+					reject.subtract(v);
+
+					return Optional.of(reject);
+				} 
 			}
-			
+
 		} else {
 			plugin.getLogger().info("Player changed worlds! From: "+from.getWorld().getName()+" To: "+to.getWorld().getName());
 		}
-		
 		return Optional.empty();
     }
-	
 
 }
