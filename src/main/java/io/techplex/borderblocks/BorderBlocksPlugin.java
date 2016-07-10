@@ -28,28 +28,28 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author techplex
  */
 public class BorderBlocksPlugin extends JavaPlugin {
-    private Logger log;
-    public FileConfiguration config;
-    
-    // Fired when plugin is first enabled
-    @Override
-    public void onEnable() {
-        log = getLogger();
-        log.info("Starting BorderBlocks Plugin");
-				
-        PluginManager pm = Bukkit.getPluginManager();
-		
+	private Logger log;
+	public FileConfiguration config;
+
+	// Fired when plugin is first enabled
+	@Override
+	public void onEnable() {
+		log = getLogger();
+		log.info("Starting BorderBlocks Plugin");
+
+		PluginManager pm = Bukkit.getPluginManager();
+
 		PluginState state = new PluginState();
 		PlayerPerms perms = new PlayerPerms(this, state);
-        
+
 		pm.registerEvents(new BlockPlayerListener(perms), this);
 		pm.registerEvents(new PlayerMoveListener(this, perms), this);
-		
-		
-    }
-	
-    // Fired when plugin is disabled
-    @Override
-    public void onDisable() {
-    }
+
+
+	}
+
+	// Fired when plugin is disabled
+	@Override
+	public void onDisable() {
+	}
 }

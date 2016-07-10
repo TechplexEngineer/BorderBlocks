@@ -5,7 +5,3 @@ version: 1.0
 permissions:
   borderblocks.teacher:
     default: false
- 
-    
-    
-    

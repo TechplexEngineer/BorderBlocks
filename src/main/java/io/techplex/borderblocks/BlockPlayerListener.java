@@ -30,47 +30,41 @@ import org.bukkit.event.block.BlockPlaceEvent;
  * @author techplex
  */
 public class BlockPlayerListener implements Listener {
-	
+
 	private PlayerPerms perms;
-	
+
 	public BlockPlayerListener(PlayerPerms perms) {
 		this.perms = perms;
 	}
-	
+
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {
-        Block removed = event.getBlock();
-        Location l = removed.getLocation();
-        int x = l.getBlockX();
-        int y = l.getBlockY();
-        int z = l.getBlockZ();
-        Player p = event.getPlayer();
-        
-        if (! perms.canPlayerDigHere(p, x, y, z)) {
-            event.setCancelled(true);
-            p.sendMessage("Sorry you cannot remove blocks here.");
-        }
-    }
-    
-    @EventHandler
+		Block removed = event.getBlock();
+		Location l = removed.getLocation();
+		int x = l.getBlockX();
+		int y = l.getBlockY();
+		int z = l.getBlockZ();
+		Player p = event.getPlayer();
+
+		if (! perms.canPlayerDigHere(p, x, y, z)) {
+			event.setCancelled(true);
+			p.sendMessage("Sorry you cannot remove blocks here.");
+		}
+	}
+
+	@EventHandler
 	public void onPlace(BlockPlaceEvent event) {
-        
-        Block placed = event.getBlockPlaced();
-        Location l = placed.getLocation();
-        int x = l.getBlockX();
-        int y = l.getBlockY();
-        int z = l.getBlockZ();
-        Player p = event.getPlayer();
-        
-        if (! perms.canPlayerBuildHere(p, x, y, z)) {
-            event.setCancelled(true);
-            p.sendMessage("Sorry you cannot place blocks here.");
-        }
-        
-        
-    }
-    
 
+		Block placed = event.getBlockPlaced();
+		Location l = placed.getLocation();
+		int x = l.getBlockX();
+		int y = l.getBlockY();
+		int z = l.getBlockZ();
+		Player p = event.getPlayer();
 
-    
+		if (! perms.canPlayerBuildHere(p, x, y, z)) {
+			event.setCancelled(true);
+			p.sendMessage("Sorry you cannot place blocks here.");
+		}
+	}
 }

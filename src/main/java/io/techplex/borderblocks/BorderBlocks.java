@@ -26,24 +26,24 @@ import org.bukkit.block.Block;
  * @author techplex
  */
 public class BorderBlocks {
-    
-    private static boolean isMaterialAndData(Block b, Material mat, byte data) {
-        return (b.getType() == mat&& b.getState().getData().getData() == data);
-    }
-    
-    public static boolean isSpecialBlock(Block b) {
-        return isBuildAllowBlock(b) ||
-        isBuildDisallowBlock(b) ||
-        isBorderBlock(b);
-    }
-    public static boolean isBuildAllowBlock(Block b) {
-        return isMaterialAndData(b, Material.STAINED_CLAY, DyeColor.LIME.getData());
-    }
-    public static boolean isBuildDisallowBlock(Block b) {
-        return isMaterialAndData(b, Material.STAINED_CLAY, DyeColor.RED.getData());              
-    }
-    
-    public static boolean isBorderBlock(Block b) {
-       return isMaterialAndData(b, Material.STAINED_CLAY, DyeColor.YELLOW.getData());             
-    }
+
+	private static boolean isMaterialAndData(Block b, Material mat, byte data) {
+		return (b.getType() == mat&& b.getState().getData().getData() == data);
+	}
+
+	public static boolean isSpecialBlock(Block b) {
+		return isBuildAllowBlock(b) ||
+		isBuildDisallowBlock(b) ||
+		isBorderBlock(b);
+	}
+	public static boolean isBuildAllowBlock(Block b) {
+		return isMaterialAndData(b, Material.STAINED_CLAY, DyeColor.LIME.getData());
+	}
+	public static boolean isBuildDisallowBlock(Block b) {
+		return isMaterialAndData(b, Material.STAINED_CLAY, DyeColor.RED.getData());
+	}
+
+	public static boolean isBorderBlock(Block b) {
+	   return isMaterialAndData(b, Material.STAINED_CLAY, DyeColor.YELLOW.getData());
+	}
 }

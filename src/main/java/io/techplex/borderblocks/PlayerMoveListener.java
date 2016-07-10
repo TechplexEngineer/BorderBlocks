@@ -40,21 +40,21 @@ import org.bukkit.util.Vector;
  * @author techplex
  */
 public class PlayerMoveListener implements Listener {
-	
+
 	private BorderBlocksPlugin plugin;
 	private Location lastValid;
 	private PlayerPerms perms;
-	
-    public PlayerMoveListener(BorderBlocksPlugin plugin, PlayerPerms perms) {
-        this.plugin = plugin;
-		this.perms = perms;
-    }
 
-    public void registerEvents() {
+	public PlayerMoveListener(BorderBlocksPlugin plugin, PlayerPerms perms) {
+		this.plugin = plugin;
+		this.perms = perms;
+	}
+
+	public void registerEvents() {
 		PluginManager pm = plugin.getServer().getPluginManager();
 		pm.registerEvents(this, plugin);
 
-    }
+	}
 // We'll assume that if they spawn somewhere they are allowed to be there.
 //    @EventHandler
 //    public void onPlayerRespawn(PlayerRespawnEvent event) {
@@ -68,37 +68,37 @@ public class PlayerMoveListener implements Listener {
 	}
 	/**
 	 * Raised when an entity enters a vehicle.
-	 * @param event 
+	 * @param event
 	 */
-    @EventHandler
-    public void onVehicleEnter(VehicleEnterEvent event) {
-        Entity entity = event.getEntered();
+	@EventHandler
+	public void onVehicleEnter(VehicleEnterEvent event) {
+		Entity entity = event.getEntered();
 
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
+		if (entity instanceof Player) {
+			Player player = (Player) entity;
 			Location from = player.getLocation().clone();
 			Location to = event.getVehicle().getLocation();
 			plugin.getLogger().info(loc2str(from)+" "+loc2str(to));
-			
+
 			Optional<Location> overriding = perms.testMoveTo(player,from, to, MoveType.EMBARK, true);
 
-            if (overriding.isPresent()) {
-                event.setCancelled(true);
-            }
-        }
-    }
+			if (overriding.isPresent()) {
+				event.setCancelled(true);
+			}
+		}
+	}
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onVehicleMove(VehicleMoveEvent event) {
 		Vehicle vehicle = event.getVehicle();
 		Entity entity = vehicle.getPassenger();
 		if (entity instanceof Player) {
-            Player player = (Player) entity;
-			
+			Player player = (Player) entity;
+
 			Optional<Location> overriding = perms.testMoveTo(player, event.getFrom(), event.getTo(), MoveType.RIDE, false);
-			
+
 			if (overriding.isPresent()) {
 				Location override = overriding.get();
-			
+
 				vehicle.eject();
 
 				Entity current = vehicle;
@@ -126,43 +126,41 @@ public class PlayerMoveListener implements Listener {
 		}
 	}
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerMove(PlayerMoveEvent event) {
-        final Player player = event.getPlayer();
-        Optional<Location> overriding = perms.testMoveTo(player, event.getFrom(), event.getTo(), MoveType.MOVE, false);
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onPlayerMove(PlayerMoveEvent event) {
+		final Player player = event.getPlayer();
+		Optional<Location> overriding = perms.testMoveTo(player, event.getFrom(), event.getTo(), MoveType.MOVE, false);
 
-        if (overriding.isPresent()) {
+		if (overriding.isPresent()) {
 			Location override = overriding.get();
-//            override.setPitch(event.getTo().getPitch());
-//            override.setYaw(event.getTo().getYaw());
 
-            event.setTo(override.clone());
+			event.setTo(override.clone());
 
-            Entity vehicle = player.getVehicle();
-            if (vehicle != null) {
-                vehicle.eject();
+			Entity vehicle = player.getVehicle();
+			if (vehicle != null) {
+				vehicle.eject();
 
-                Entity current = vehicle;
-                while (current != null) {
-                    current.eject();
-                    vehicle.setVelocity(new Vector());
-                    if (vehicle instanceof LivingEntity) {
-                        vehicle.teleport(override.clone());
-                    } else {
-                        vehicle.teleport(override.clone().add(0, 1, 0));
-                    }
-                    current = current.getVehicle();
-                }
+				Entity current = vehicle;
+				while (current != null) {
+					current.eject();
+					vehicle.setVelocity(new Vector());
+					if (vehicle instanceof LivingEntity) {
+						vehicle.teleport(override.clone());
+					} else {
+						vehicle.teleport(override.clone().add(0, 1, 0));
+					}
+					current = current.getVehicle();
+				}
 
-                player.teleport(override.clone().add(0, 1, 0));
+				player.teleport(override.clone().add(0, 1, 0));
 
-                Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        player.teleport(override.clone().add(0, 1, 0));
-                    }
-                }, 1);
-            }
-        }
-    }
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+					@Override
+					public void run() {
+						player.teleport(override.clone().add(0, 1, 0));
+					}
+				}, 1);
+			}
+		}
+	}
 }

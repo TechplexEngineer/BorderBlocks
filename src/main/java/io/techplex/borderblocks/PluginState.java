@@ -18,21 +18,21 @@
 package io.techplex.borderblocks;
 
 /**
- *
+ * Manage the plugin state
  * @author techplex
  */
 public class PluginState {
-    //set to true to allow students to build in restricted areas not over build allow blocks.
-    private boolean studentBuildingEnabled = false;
-	
-    public PluginState() {
+	//set to true to allow students to build in restricted areas not over build allow blocks.
+	private boolean studentBuildingEnabled = false;
+
+	public PluginState() {
 	}
 
-    public boolean isStudentBuildingEnabled() {
-        return studentBuildingEnabled;
-    }
+	public boolean isStudentBuildingEnabled() {
+		return studentBuildingEnabled;
+	}
 
-    public void setStudentBuildingEnabled(boolean enabled) {
-        this.studentBuildingEnabled = enabled;
-    }
+	public void setStudentBuildingEnabled(boolean enabled) {
+		this.studentBuildingEnabled = enabled;
+	}
 }

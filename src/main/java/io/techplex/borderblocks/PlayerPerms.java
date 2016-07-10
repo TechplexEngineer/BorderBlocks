@@ -28,19 +28,18 @@ import org.bukkit.util.Vector;
  * @author techplex
  */
 public class PlayerPerms {
-	
+
 	private PluginState state;
 	private final BorderBlocksPlugin plugin;
 	private final String teacherPerm = "borderblocks.teacher";
-	
+
 	public PlayerPerms(BorderBlocksPlugin plugin, PluginState state) {
 		this.state = state;
 		this.plugin = plugin;
 	}
-	
-	
-    public boolean canPlayerBuildHere(Player player, int x, int y, int z) {
-        //remember in MC y is the altitude while x and z are the lat and lon
+
+	public boolean canPlayerBuildHere(Player player, int x, int y, int z) {
+		//remember in MC y is the altitude while x and z are the lat and lon
 		if (player.hasPermission(teacherPerm)) {
 			return true;
 		}
@@ -50,16 +49,16 @@ public class PlayerPerms {
 
 		return allowBuild;
 
-        
-    }
-    public boolean canPlayerDigHere(Player player, int x, int y, int z) {
-        
+
+	}
+	public boolean canPlayerDigHere(Player player, int x, int y, int z) {
+
 		if (player.hasPermission(teacherPerm)) {
 			return true;
 		}
 		//remember in MC y is the altitude while x and z are the lat and lon
-        Location loc = new Location(player.getWorld(), x, y, z);
-        //are we in a restricted area
+		Location loc = new Location(player.getWorld(), x, y, z);
+		//are we in a restricted area
 
 
 		if (BorderBlocks.isSpecialBlock(loc.getBlock())) {
@@ -70,41 +69,41 @@ public class PlayerPerms {
 		allowDig = blocksAllowBuilding(allowDig, player, x, y, z);
 
 		return allowDig;
-        
-    }
-    private static boolean blocksAllowBuilding(boolean allowChange, Player player, int x, int y, int z) {
-        //search down for build allow of build deny block
-        //start at block y and look downward for special blocks which prevent building, stopping at a depth of -64 or the first build allow or disallow block
-        //if we don't find a build disallow block and building is enabled return true
-        for (int alt = y - 1; alt > alt - 64 && alt >= 0; --alt) {
-            Block b = new Location(player.getWorld(), x, alt, z).getBlock();
-            if (BorderBlocks.isBuildAllowBlock(b)) {
-                allowChange = true;
-                break;
-            }
-            if (BorderBlocks.isBuildDisallowBlock(b)) {
-                allowChange = false;
-                break;
-            }
-            if (BorderBlocks.isBorderBlock(b)) {
-                allowChange = false;
-                break;
-            }
-        }
-        //If we have determined that the player can build
-        //starting a block y look up for a border block. if found, return false, else true
-        if (allowChange) {
-            for (int alt = y + 1; alt <= 255; ++alt) {
-                Block b = new Location(player.getWorld(), x, alt, z).getBlock();
-                if (BorderBlocks.isBorderBlock(b)) {
-                    allowChange = false;
-                    break;
-                }
-            }
-        }
 
-        return allowChange;
-    }
+	}
+	private static boolean blocksAllowBuilding(boolean allowChange, Player player, int x, int y, int z) {
+		//search down for build allow of build deny block
+		//start at block y and look downward for special blocks which prevent building, stopping at a depth of -64 or the first build allow or disallow block
+		//if we don't find a build disallow block and building is enabled return true
+		for (int alt = y - 1; alt > alt - 64 && alt >= 0; --alt) {
+			Block b = new Location(player.getWorld(), x, alt, z).getBlock();
+			if (BorderBlocks.isBuildAllowBlock(b)) {
+				allowChange = true;
+				break;
+			}
+			if (BorderBlocks.isBuildDisallowBlock(b)) {
+				allowChange = false;
+				break;
+			}
+			if (BorderBlocks.isBorderBlock(b)) {
+				allowChange = false;
+				break;
+			}
+		}
+		//If we have determined that the player can build
+		//starting a block y look up for a border block. if found, return false, else true
+		if (allowChange) {
+			for (int alt = y + 1; alt <= 255; ++alt) {
+				Block b = new Location(player.getWorld(), x, alt, z).getBlock();
+				if (BorderBlocks.isBorderBlock(b)) {
+					allowChange = false;
+					break;
+				}
+			}
+		}
+
+		return allowChange;
+	}
 	/**
 	 * Test movement to the given location.
 	 *
@@ -124,7 +123,7 @@ public class PlayerPerms {
 	 * @return The overridden location, if the location is being overridden
 	 */
 	public Optional<Location> testMoveTo(Player player, Location from, Location to, MoveType moveType, boolean forced) {
-		
+
 		if (player.hasPermission(teacherPerm)) {
 			return Optional.empty();
 		}
@@ -163,10 +162,10 @@ public class PlayerPerms {
 							vz = vz / Math.abs(vz);
 
 							Vector v = new Vector(vx, vy, vz);
-//								v.multiply(2);
-							//					plugin.getLogger().info(""+v);
+//							v.multiply(2);
+//							plugin.getLogger().info(""+v);
 
-//								reject.subtract();
+//							reject.subtract();
 						}
 
 						return Optional.of(reject);
