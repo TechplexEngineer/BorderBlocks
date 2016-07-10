@@ -44,9 +44,6 @@ public class BorderBlocks {
     }
     
     public static boolean isBorderBlock(Block b) {
-        if (b.getType() == Material.FENCE) {
-            return true; 
-        }
-       return false;               
+       return isMaterialAndData(b, Material.STAINED_CLAY, DyeColor.YELLOW.getData());             
     }
 }
