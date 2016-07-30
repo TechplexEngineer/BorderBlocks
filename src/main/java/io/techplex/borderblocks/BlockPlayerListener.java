@@ -26,7 +26,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 /**
- *
+ * Handle all events related to breaking and placing blocks.
+ * Determine if the user has the requisite permissions to place/break the block.
  * @author techplex
  */
 public class BlockPlayerListener implements Listener {

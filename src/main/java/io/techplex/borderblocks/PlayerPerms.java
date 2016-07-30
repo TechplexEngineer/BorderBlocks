@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 /**
- *
+ * Handle any checks if a player has permission for an action.
  * @author techplex
  */
 public class PlayerPerms {

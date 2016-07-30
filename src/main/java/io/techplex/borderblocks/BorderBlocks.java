@@ -22,7 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 /**
- *
+ * Provide static methods which test for the special blocks this plugin provides.
  * @author techplex
  */
 public class BorderBlocks {
