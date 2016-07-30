@@ -17,22 +17,62 @@
  */
 package io.techplex.borderblocks;
 
+import java.util.ArrayList;
+import java.util.UUID;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
 /**
- * Manage the plugin state
+ * Manage the plugin state and allow for serialization for storage
  * @author techplex
  */
 public class PluginState {
+	private final JavaPlugin plugin;
+	
 	//set to true to allow students to build in restricted areas not over build allow blocks.
-	private boolean studentBuildingEnabled = false;
+	private boolean studentBuildingEnabled;
+	private final ArrayList<OfflinePlayer> teachers;
+	
+	//Set to true when this class needs to be persisted.
+	private boolean dirtybit;
 
-	public PluginState() {
+	public PluginState(JavaPlugin plugin) {
+		this.plugin = plugin;
+		
+		studentBuildingEnabled = plugin.getConfig().getBoolean("allowStudentBuilding");
+ 		teachers = new ArrayList<>(); //@todo this should come from the persisted data
+
+		
+		dirtybit = true;
 	}
 
 	public boolean isStudentBuildingEnabled() {
+		dirtybit = true;
 		return studentBuildingEnabled;
 	}
 
 	public void setStudentBuildingEnabled(boolean enabled) {
 		this.studentBuildingEnabled = enabled;
+	}
+	
+	
+	
+	public boolean isTeacher(Player p) {
+		OfflinePlayer op = p;
+		return teachers.contains(op);
+	}
+
+	public ArrayList<OfflinePlayer> getTeachers() {
+		return teachers;
+	}
+	
+	public void addTeacher(UUID id) {
+		dirtybit = true;
+		teachers.add(plugin.getServer().getOfflinePlayer(id));
+	}
+
+	public void removeTeacher(UUID id) {
+		teachers.remove(plugin.getServer().getOfflinePlayer(id));
 	}
 }

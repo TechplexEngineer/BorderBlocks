@@ -31,7 +31,6 @@ public class PlayerPerms {
 
 	private PluginState state;
 	private final BorderBlocksPlugin plugin;
-	private final String teacherPerm = "borderblocks.teacher";
 
 	public PlayerPerms(BorderBlocksPlugin plugin, PluginState state) {
 		this.state = state;
@@ -40,7 +39,7 @@ public class PlayerPerms {
 
 	public boolean canPlayerBuildHere(Player player, int x, int y, int z) {
 		//remember in MC y is the altitude while x and z are the lat and lon
-		if (player.hasPermission(teacherPerm)) {
+		if (state.isTeacher(player)) {
 			return true;
 		}
 		boolean allowBuild = state.isStudentBuildingEnabled(); //is student building enabled
@@ -53,7 +52,7 @@ public class PlayerPerms {
 	}
 	public boolean canPlayerDigHere(Player player, int x, int y, int z) {
 
-		if (player.hasPermission(teacherPerm)) {
+		if (state.isTeacher(player)) {
 			return true;
 		}
 		//remember in MC y is the altitude while x and z are the lat and lon
@@ -124,7 +123,7 @@ public class PlayerPerms {
 	 */
 	public Optional<Location> testMoveTo(Player player, Location from, Location to, MoveType moveType, boolean forced) {
 
-		if (player.hasPermission(teacherPerm)) {
+		if (state.isTeacher(player)) {
 			return Optional.empty();
 		}
 

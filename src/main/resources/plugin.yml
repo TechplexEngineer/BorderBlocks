@@ -2,6 +2,7 @@ name: BorderBlocks
 author: TechplexEngineer
 main: io.techplex.borderblocks.BorderBlocksPlugin
 version: 1.0
-permissions:
-  borderblocks.teacher:
-    default: false
+commands:
+  allowStudentBuilding:
+      aliases: asb
+  teacher:
